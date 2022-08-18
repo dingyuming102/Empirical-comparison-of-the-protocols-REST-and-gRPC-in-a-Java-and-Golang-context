@@ -1,0 +1,39 @@
+syntax = "proto3";
+//protoc -I . transaction.proto --go_out=plugins=grpc:.
+
+option go_package = ".;proto";
+
+//option java_multiple_files = true;
+option java_package = "com.example.proto";
+//option java_outer_classname = "Transaction";
+
+
+service SquareGRPC {
+    rpc Square (SmallTransaction) returns (SmallTransaction) {}
+}
+
+service FilterGRPC {
+    rpc GrayscaleFilter (MediumTransaction) returns (MediumTransaction) {}
+}
+
+service MatrixOpGRPC {
+    rpc Multiplier(stream LargeTransaction) returns (stream LargeTransaction); //双向流模式
+}
+
+message SmallTransaction {
+    int32 id = 1;
+    int32 data = 2;
+}
+
+message MediumTransaction {
+    int32 id = 1;
+    repeated bytes data = 2;
+}
+
+message LargeTransaction {
+    int32 id = 1;
+    message Row {
+        repeated double row = 1;
+    }
+    repeated Row matrix = 2;
+}
